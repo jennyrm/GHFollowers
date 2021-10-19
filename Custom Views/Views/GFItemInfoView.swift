@@ -53,4 +53,23 @@ class GFItemInfoView: UIView {
         ])
     }
     
+    func set(itemInfoType: ItemInfoType, withCount count: Int) {
+        switch itemInfoType {
+        case .repos:
+            symbolImageView.image = UIImage(systemName: SFSymbols.repos)
+            titleLabel.text = "Public Repos"
+        case .gists:
+            symbolImageView.image = UIImage(systemName: SFSymbols.gists)
+            titleLabel.text = "Public Gists"
+        case .followers:
+            symbolImageView.image = UIImage(systemName: SFSymbols.followers)
+            titleLabel.text = "Public Followers"
+        case .following:
+            symbolImageView.image = UIImage(systemName: SFSymbols.following)
+            titleLabel.text = "Public Following"
+        }
+        
+        countLabel.text = String(count)
+    }
+    
 }//End of class
