@@ -10,46 +10,53 @@ import UIKit
 class UserInfoVC: UIViewController {
     
     var headerView = UIView()
+    var itemViewOne = UIView()
+    var itemViewTwo = UIView()
+    var itemViews: [UIView] = []
     
     var username: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureViewController()
+        addSubviewsAndLayoutUI()
+        getUserInfo()
+    }
+    
+    func configureViewController() {
         view.backgroundColor = .systemBackground
         
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissVC))
         navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func addSubviewsAndLayoutUI() {
+        let padding: CGFloat = 20
+        let itemHeight: CGFloat = 140
+        itemViews = [headerView, itemViewOne, itemViewTwo]
         
-        addSubviews()
-        layoutUI()
-        
-        NetworkManager.shared.getUserInfo(for: username) { [weak self] result in
-            guard let self = self else { return }
+        for itemView in itemViews {
+            view.addSubview(itemView)
+            itemView.translatesAutoresizingMaskIntoConstraints = false
             
-            switch result {
-            case .success(let user):
-                DispatchQueue.main.async {
-                    self.add(childVC: GFUserInfoHeaderVC(user: user), to: self.headerView)
-                }
-            case .failure(let error):
-                self.presentGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
-            }
+            NSLayoutConstraint.activate([
+                itemView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+                itemView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding)
+            ])
         }
-    }
-    
-    func addSubviews() {
-        view.addSubview(headerView)
-    }
-    
-    func layoutUI() {
-        headerView.backgroundColor = .systemPink
-        headerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        itemViewOne.backgroundColor = .systemBlue
+        itemViewTwo.backgroundColor = .systemTeal
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 180)
+            headerView.heightAnchor.constraint(equalToConstant: 180),
+            
+            itemViewOne.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: padding),
+            itemViewOne.heightAnchor.constraint(equalToConstant: itemHeight),
+            
+            itemViewTwo.topAnchor.constraint(equalTo: itemViewOne.bottomAnchor, constant: padding),
+            itemViewTwo.heightAnchor.constraint(equalToConstant: itemHeight)
         ])
     }
     
@@ -58,6 +65,22 @@ class UserInfoVC: UIViewController {
         containerView.addSubview(childVC.view)
         childVC.view.frame = containerView.bounds
         childVC.didMove(toParent: self)
+    }
+    
+    func getUserInfo() {
+        NetworkManager.shared.getUserInfo(for: username) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let user):
+                print(user)
+                DispatchQueue.main.async {
+                    self.add(childVC: GFUserInfoHeaderVC(user: user), to: self.headerView)
+                }
+            case .failure(let error):
+                self.presentGFAlertOnMainThread(title: "Something went wrong", message: error.rawValue, buttonTitle: "Ok")
+            }
+        }
     }
     
     @objc func dismissVC() {
