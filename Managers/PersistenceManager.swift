@@ -7,12 +7,20 @@
 
 import Foundation
 
+enum PersistenceActionType {
+    case add, remove
+}
+
 enum PersistenceManager {
     
     static private let defaults = UserDefaults.standard
     
     enum Keys {
         static let favorites = "favorites"
+    }
+    
+    static func updateWith(favorite: Follower, actionType: PersistenceActionType, completed: @escaping (GFError?) -> Void) {
+        
     }
     
     static func retrieveFavorites(completed: @escaping (Result<[Follower], GFError>) -> Void) {
@@ -28,13 +36,13 @@ enum PersistenceManager {
         }
     }
     
-    static func save(favorites: [Follower]-> GFError?) {
+    static func save(favorites: [Follower]) -> GFError? {
         do {
             let encodedFavorites = try JSONEncoder().encode(favorites)
+            defaults.set(encodedFavorites, forKey: Keys.favorites )
             return nil
         } catch {
-            print("Error in \(#function)\(#line) : \(error.localizedDescription) \n---\n \(error)")
-            return
+            return .unableToFavorite
         }
     }
     
