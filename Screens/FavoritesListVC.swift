@@ -93,10 +93,10 @@ extension FavoritesListVC: UITableViewDelegate, UITableViewDataSource {
         favorites.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         
-        PersistenceManager.updateWith(favorite: favorite, actionType: .remove) { [weak self] error in
-            guard let self = self else { return }
-            guard let error = error else { return }
-            self.presentGFAlertOnMainThread(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
-        }
+//        PersistenceManager.updateWith(favorite: favorite, actionType: .remove) { [weak self] error in
+//            guard let self = self else { return }
+//            guard let error = error else { return }
+//            self.presentGFAlertOnMainThread(title: "Unable to remove", message: error.rawValue, buttonTitle: "Ok")
+//        }
     }
 }//End of extension

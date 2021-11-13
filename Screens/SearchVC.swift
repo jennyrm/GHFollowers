@@ -24,9 +24,6 @@ class SearchVC: UIViewController {
         configureTextField()
         configureCallToActionButton()
         createDismissKeyboardTapGesture()
-        
-        let b = zip([1,2,3,4,5,6,7,8], ["a","b","c"])
-        print(b)
     }
     
     override func viewWillAppear(_ animated: Bool) {
