@@ -23,5 +23,5 @@ struct UIHelper {
         return flowLayout
     }
     
-}//End of struct
+}//End of struct 
 
